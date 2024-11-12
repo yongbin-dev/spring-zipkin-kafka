@@ -40,6 +40,10 @@ allprojects {
         implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
         implementation 'io.zipkin.brave:brave-instrumentation-kafka-clients'
 
+
+        // Add Tracing FEIGN CLIENT
+        implementation 'io.github.openfeign:feign-micrometer'
+
         // Netty Reactor내 Tracing을 위한 라이브러리
         implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
 
