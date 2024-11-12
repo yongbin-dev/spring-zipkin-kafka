@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: client-service1
+
+kafka:
+  brokers: localhost:19094
+  topic: zipkin-topic
+  group-id: zipkin-group
+#  max-poll-records: 3
+#  enable-auto-commit: false
+#  auto-offset-reset: latest
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      type: b3_multi
+  zipkin:
+    tracing:
+      endpoint: "http://localhost:9411/api/v2/spans"
