@@ -1,43 +1,31 @@
 package com.yb.component
 
-import brave.Tracer
 import brave.Tracing
 import brave.propagation.TraceContext
 import com.yb.client.StudentClient
 import com.yb.dto.response.StudentResponseDto
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
-import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.ServerSentEvent
 import org.springframework.stereotype.Component
-import org.springframework.web.client.RestTemplate
-import org.springframework.web.client.getForEntity
-import org.springframework.web.reactive.function.client.ClientRequest
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
-import reactor.core.publisher.Mono
 import java.math.BigInteger
 
 
 @Component
 class SSEClientComponent(
-    @Autowired private val webClientBuilder: WebClient.Builder,
-    private val restTemplate: RestTemplate,
-    private val tracer: Tracer,
+    private var webClient: WebClient,
     private val tracing: Tracing,
-    @Autowired private val studentClient: StudentClient
+    private val studentClient: StudentClient
 ) {
-
-
-    private val webClient: WebClient = webClientBuilder
-        .baseUrl("http://localhost:8083")
-        .filter(traceExchangeFilterFunction())
-        .build()
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
     init {
+        webClient = WebClient.builder()
+            .baseUrl("http://localhost:8083")
+            .build()
+
         sseClientConnect()
     }
 
@@ -61,16 +49,13 @@ class SSEClientComponent(
                     .name("process-sse-event")
                     .start()
 
-                tracing.tracer().withSpanInScope(span).use { _ ->
-                    try {
-
-                        // 이벤트 처리 로직
-                        val result: String = this.getStudent(response)
-                        log.info("result : {} ", result)
-
-                    } finally {
-                        span.finish()
+                log.info("traceId : {} ", traceId)
+                try {
+                    tracing.tracer().withSpanInScope(span).use {
+                        this.getStudent(response)
                     }
+                } finally {
+                    span.finish()
                 }
             }.doOnComplete {
                 log.info(" Complete connected , retry SSE")
@@ -86,13 +71,13 @@ class SSEClientComponent(
 
 
     fun getStudent(sse: ServerSentEvent<String>): String {
-        val response: ResponseEntity<List<StudentResponseDto>> =
-            restTemplate.getForEntity("http://localhost:8089/student")
-//        val response: ResponseEntity<List<StudentResponseDto>> = studentClient.getStudent()
+//        val response: ResponseEntity<List<StudentResponseDto>> =
+//            restTemplate.getForEntity("http://localhost:8089/student")
+
+        val response = studentClient.getStudent();
         val dto: List<StudentResponseDto> = response.body!!;
         tracing.tracer().currentSpan().tag("result-data", dto.toString())
         return dto.toString();
-//        return response;
     }
 
 
@@ -127,21 +112,21 @@ class SSEClientComponent(
             .build()
     }
 
-    private fun traceExchangeFilterFunction(): ExchangeFilterFunction {
-        return ExchangeFilterFunction.ofRequestProcessor { clientRequest ->
-            val currentSpan = tracing.tracer().currentSpan()
-            if (currentSpan != null) {
-                val context = currentSpan.context()
-                val request = ClientRequest.from(clientRequest)
-                    .header("X-B3-TraceId", context.traceIdString())
-                    .header("X-B3-SpanId", context.spanIdString())
-                    .header("X-B3-ParentSpanId", context.parentIdString())
-                    .build()
-                Mono.just(request)
-            } else {
-                Mono.just(clientRequest)
-            }
-        }
-    }
+//    private fun traceExchangeFilterFunction(): ExchangeFilterFunction {
+//        return ExchangeFilterFunction.ofRequestProcessor { clientRequest ->
+//            val currentSpan = tracing.tracer().currentSpan()
+//            if (currentSpan != null) {
+//                val context = currentSpan.context()
+//                val request = ClientRequest.from(clientRequest)
+//                    .header("X-B3-TraceId", context.traceIdString())
+//                    .header("X-B3-SpanId", context.spanIdString())
+//                    .header("X-B3-ParentSpanId", context.parentIdString())
+//                    .build()
+//                Mono.just(request)
+//            } else {
+//                Mono.just(clientRequest)
+//            }
+//        }
+//    }
 
 }
