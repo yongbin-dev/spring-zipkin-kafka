@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.ServerSentEvent
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.getForEntity
 import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
@@ -65,7 +66,7 @@ class SSEClientComponent(
 
                         // 이벤트 처리 로직
                         val result: String = this.getStudent(response)
-                        log.info(result)
+                        log.info("result : {} ", result)
 
                     } finally {
                         span.finish()
@@ -85,7 +86,9 @@ class SSEClientComponent(
 
 
     fun getStudent(sse: ServerSentEvent<String>): String {
-        val response: ResponseEntity<List<StudentResponseDto>> = studentClient.getStudent()
+        val response: ResponseEntity<List<StudentResponseDto>> =
+            restTemplate.getForEntity("http://localhost:8089/student")
+//        val response: ResponseEntity<List<StudentResponseDto>> = studentClient.getStudent()
         val dto: List<StudentResponseDto> = response.body!!;
         tracing.tracer().currentSpan().tag("result-data", dto.toString())
         return dto.toString();

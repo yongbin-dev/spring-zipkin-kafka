@@ -33,7 +33,6 @@ allprojects {
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
         implementation 'org.springframework.boot:spring-boot-starter-webflux'
         implementation 'org.springframework.boot:spring-boot-starter-aop'
-        implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
         implementation 'org.springframework.kafka:spring-kafka'
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
@@ -41,28 +40,14 @@ allprojects {
         implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
         implementation 'io.zipkin.brave:brave-instrumentation-kafka-clients'
 
-        implementation "io.projectreactor:reactor-tools"
+        // Netty Reactor내 Tracing을 위한 라이브러리
+        implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
 
-        // r2dbc
-        implementation("io.asyncer:r2dbc-mysql:0.9.2")
+//        implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
+//        implementation 'org.springframework.boot:spring-boot-starter-logging'
+//        implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
 
-        // rxjava
-        implementation("io.reactivex.rxjava3:rxjava:_")
-
-        if (System.getProperty("os.arch") == "aarch64" && System.getProperty("os.name") == "Mac OS X") {
-            runtimeOnly("io.netty:netty-resolver-dns-native-macos:_:osx-aarch_64")
-        }
-
-        // kotlin
-        implementation("org.jetbrains.kotlin:kotlin-reflect:_")
-
-        // coroutine
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:_")
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:_")
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx3:_")
-
-
-        implementation("io.github.oshai:kotlin-logging-jvm:7.0.0")
+        implementation("org.jetbrains.kotlin:kotlin-reflect:2.0.0")
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
     }
 
