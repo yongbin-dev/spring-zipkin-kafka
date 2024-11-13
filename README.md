@@ -1,11 +1,16 @@
 # spring-zipkin-kafka
 
+## architecture
+
+![architecture](image/architecture.png)
+![sd](image/kibana-dashboard.png)
+![sd](image/kibana-discover.png)
+
 ## ~ 2024-11-12
 
 ### Spring-Boot 3.0
 
 - Spring Cloud Sleuth를 Micrometer Tracing으로 이관
--
 
 ### Tag
 
