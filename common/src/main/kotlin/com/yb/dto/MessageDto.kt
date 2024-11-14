@@ -1,7 +1,8 @@
 package com.yb.dto
 
 
-open class MessageDto(
+data class MessageDto(
     val id: String,
     val data: List<Map<String, Any>>,
+    val traceDto: TraceDto
 )

@@ -22,8 +22,6 @@ class KafkaConfig(
     private val brokers: String,
 //    @Value("\${kafka.enable-auto-commit}")
 //    private val enableAutoCommit: Boolean,
-//    @Value("\${kafka.max-poll-records}")
-//    private val maxPollRecords: Int,
 //    @Value("\${kafka.auto-offset-reset}")
 //    private val autoOffsetReset: String,
 ) {
@@ -54,7 +52,7 @@ class KafkaConfig(
         props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
 //        props[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = enableAutoCommit
 //        props[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = autoOffsetReset
-//        props[ConsumerConfig.MAX_POLL_RECORDS_CONFIG] = maxPollRecords
+        props[ConsumerConfig.MAX_POLL_RECORDS_CONFIG] = 1
 
         return props
     }

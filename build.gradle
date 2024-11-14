@@ -38,10 +38,11 @@ allprojects {
 
         implementation 'io.micrometer:micrometer-tracing-bridge-brave'
         implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+
+        // for kafka Tracing
         implementation 'io.zipkin.brave:brave-instrumentation-kafka-clients'
 
-
-        // Add Tracing FEIGN CLIENT
+        // for feign-client Tracing
         implementation 'io.github.openfeign:feign-micrometer'
 
         // Netty Reactor내 Tracing을 위한 라이브러리
@@ -51,8 +52,10 @@ allprojects {
 //        implementation 'org.springframework.boot:spring-boot-starter-logging'
 //        implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
 
+        implementation("io.github.oshai:kotlin-logging-jvm:7.0.0")
         implementation("org.jetbrains.kotlin:kotlin-reflect:2.0.0")
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
+
     }
 
     test {
