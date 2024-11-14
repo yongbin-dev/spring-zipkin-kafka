@@ -1,6 +1,5 @@
 package com.yb.repository
 
-import com.yb.exception.NotFoundEmitterException
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Sinks
 import java.util.concurrent.ConcurrentHashMap
@@ -9,8 +8,9 @@ import java.util.concurrent.ConcurrentHashMap
 class EmitterRepository {
     private val emitters: MutableMap<String, Sinks.Many<Any>> = ConcurrentHashMap()
 
-    fun findById(id: String): Sinks.Many<Any> {
-        val emitter = emitters[id] ?: throw NotFoundEmitterException()
+
+    fun findById(id: String): Sinks.Many<Any>? {
+        val emitter = emitters[id]
         return emitter
     }
 

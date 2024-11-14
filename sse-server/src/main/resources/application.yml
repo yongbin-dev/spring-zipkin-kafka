@@ -4,6 +4,19 @@ server:
 spring:
   application:
     name: sse-service
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_KEY}
+      region:
+        static: ${AWS_REGION}
+      sns:
+        topic:
+          arn: ${AWS_TOPIC_ARC}
+      sqs:
+        queue:
+          name: ${AWS_QUEUE_NAME}
 
 management:
   tracing:
@@ -21,11 +34,7 @@ management:
       exposure:
         include: "*"
 
-
 kafka:
   brokers: localhost:19094
   topic: zipkin-topic
   group-id: zipkin-group
-#  max-poll-records: 3
-#  enable-auto-commit: false
-#  auto-offset-reset: latest
