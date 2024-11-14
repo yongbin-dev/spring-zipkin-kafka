@@ -17,24 +17,3 @@ spring:
       sqs:
         queue:
           name: ${AWS_QUEUE_NAME}
-
-management:
-  tracing:
-    sampling:
-      probability: 1.0
-    propagation:
-      type: b3_multi
-  zipkin:
-    tracing:
-      kafka:
-        topic: "zipkin-test"
-      endpoint: "http://localhost:9411/api/v2/spans"
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-
-kafka:
-  brokers: localhost:19094
-  topic: zipkin-topic
-  group-id: zipkin-group

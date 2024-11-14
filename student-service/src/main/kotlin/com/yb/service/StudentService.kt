@@ -1,9 +1,9 @@
 package com.yb.service
 
 import com.yb.domain.Student
-import com.yb.domain.repository.StudentRepository
 import com.yb.dto.request.StudentRequestDto
 import com.yb.dto.response.StudentResponseDto
+import com.yb.repository.StudentRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
