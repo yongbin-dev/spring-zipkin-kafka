@@ -20,10 +20,6 @@ import org.springframework.kafka.support.micrometer.KafkaTemplateObservation
 class KafkaConfig(
     @Value("\${kafka.brokers}")
     private val brokers: String,
-//    @Value("\${kafka.enable-auto-commit}")
-//    private val enableAutoCommit: Boolean,
-//    @Value("\${kafka.auto-offset-reset}")
-//    private val autoOffsetReset: String,
 ) {
     @Bean
     fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String> {

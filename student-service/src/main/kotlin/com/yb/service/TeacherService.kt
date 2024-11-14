@@ -1,16 +1,15 @@
 package com.yb.service
 
 import com.yb.domain.Teacher
-import com.yb.domain.repository.TeacherRepository
 import com.yb.dto.request.TeacherRequestDto
 import com.yb.dto.response.TeacherResponseDto
-import org.springframework.beans.factory.annotation.Autowired
+import com.yb.repository.TeacherRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class TeacherService(
-    @Autowired val teacherRepository: TeacherRepository
+    val teacherRepository: TeacherRepository
 ) {
 
     fun findByAllTeacher(): List<TeacherResponseDto> {
