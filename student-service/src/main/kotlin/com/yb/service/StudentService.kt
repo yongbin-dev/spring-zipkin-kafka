@@ -1,15 +1,15 @@
 package com.yb.service
 
-import com.yb.domain.Student
+import com.yb.domain.jpa.Student
 import com.yb.dto.request.StudentRequestDto
 import com.yb.dto.response.StudentResponseDto
-import com.yb.repository.StudentRepository
+import com.yb.repository.jpa.StudentRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class StudentService(
-    private val studentRepository: StudentRepository
+    private val studentRepository: StudentRepository,
 ) {
     fun findByAllStudent(): List<StudentResponseDto> {
         return studentRepository.findAll().map { s -> StudentResponseDto.from(s) }
@@ -27,5 +27,4 @@ class StudentService(
 
         return StudentResponseDto.from(student)
     }
-
 }

@@ -1,6 +1,6 @@
 package com.yb.dto.response
 
-import com.yb.domain.Student
+import com.yb.domain.jpa.Student
 
 
 data class StudentResponseDto(

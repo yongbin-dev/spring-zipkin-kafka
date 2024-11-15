@@ -1,6 +1,6 @@
-package com.yb.repository
+package com.yb.repository.jpa
 
-import com.yb.domain.Student
+import com.yb.domain.jpa.Student
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface StudentRepository : JpaRepository<Student, Long>

@@ -1,45 +1,65 @@
 package com.yb.config
 
 import jakarta.persistence.EntityManagerFactory
-import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.PlatformTransactionManager
+import java.util.*
 import javax.sql.DataSource
 
 
 @Configuration
-//@EnableJpaRepositories(basePackages = ["com.yb"]) // JPA 리포지토리 패키지 경로 설정
-//@EnableJpaAuditing
-//@EnableTransactionManagement
+@EnableJpaRepositories(basePackages = ["com.yb.repository.jpa"]) // JPA 리포지토리 패키지 경로 설정
 class JpaConfig(
-    val dataSource: DataSource
 ) {
 
     @Bean
-    fun entityManagerFactory(builder: EntityManagerFactoryBuilder): LocalContainerEntityManagerFactoryBean {
-        return builder
-            .dataSource(dataSource) // DataSource 빈을 사용
-            .packages("com.yb") // JPA 엔티티 클래스 경로
-            .persistenceUnit("default")
-//            .properties(hibernateProperties()) // Hibernate 추가 설정
-            .build()
+    @ConfigurationProperties("spring.datasource.jpa")
+    fun jpaDataSourceProperties(): DataSourceProperties {
+        return DataSourceProperties()
+    }
+
+    @Bean
+    fun dataSource(): DataSource {
+        return jpaDataSourceProperties().initializeDataSourceBuilder().build()
+    }
+
+    @Bean
+    fun entityManagerFactory(dataSource: DataSource): LocalContainerEntityManagerFactoryBean {
+        val em = LocalContainerEntityManagerFactoryBean()
+        em.dataSource = dataSource
+        em.setPackagesToScan("com.yb.domain.jpa") // 엔티티 클래스가 위치한 패키지
+
+        val vendorAdapter = HibernateJpaVendorAdapter()
+        em.jpaVendorAdapter = vendorAdapter
+        em.setJpaProperties(additionalProperties())
+        return em
     }
 
     @Bean
     fun transactionManager(entityManagerFactory: EntityManagerFactory): PlatformTransactionManager {
-        return JpaTransactionManager(entityManagerFactory)
+        val txManager = JpaTransactionManager()
+        txManager.entityManagerFactory = entityManagerFactory
+        return txManager
     }
-//
-//    private fun hibernateProperties(): Map<String, Any> {
-//        val properties: MutableMap<String, Any> = HashMap()
-//        properties["hibernate.dialect"] = "org.hibernate.dialect.MySQLDialect"
-//        properties["hibernate.hbm2ddl.auto"] = "update"
-//        properties["hibernate.show_sql"] = true
-//        properties["hibernate.format_sql"] = true
-//        return properties
-//    }
+
+
+    private fun additionalProperties(): Properties {
+        val properties = Properties()
+        properties.setProperty("hibernate.hbm2ddl.auto", "update")
+        properties.setProperty("hibernate.show_sql", "true")
+        properties.setProperty("hibernate.format_sql", "true")
+        properties.setProperty(
+            "hibernate.transaction.jta.platform",
+            "org.hibernate.service.jta.JtaPlatform"
+        )
+        return properties
+    }
 
 }

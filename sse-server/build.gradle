@@ -9,15 +9,10 @@ jar {
 dependencies {
     implementation(project(':common'))
 
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation 'org.springframework.kafka:spring-kafka'
 
     implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.0")
-    // Replace the following with the starter dependencies of specific modules you wish to use
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-sns'
-
-
 }
 
 test {
