@@ -6,4 +6,5 @@ include 'common'
 include 'student-service'
 include 'sse-server'
 include 'client-service-1'
+include 'sugang-service'
 

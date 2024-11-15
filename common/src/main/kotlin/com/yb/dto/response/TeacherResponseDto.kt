@@ -1,6 +1,6 @@
 package com.yb.dto.response
 
-import com.yb.domain.Teacher
+import com.yb.domain.jpa.Teacher
 
 data class TeacherResponseDto(
     var name: String,

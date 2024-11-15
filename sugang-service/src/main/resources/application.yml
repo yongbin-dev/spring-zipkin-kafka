@@ -1,0 +1,9 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: sugang-service
+
+#    io.r2dbc.mysql.PARAM: DEBUG # for parameters
+

@@ -1,4 +1,4 @@
-package com.yb.domain
+package com.yb.domain.jpa
 
 import com.yb.dto.request.StudentRequestDto
 import jakarta.persistence.*

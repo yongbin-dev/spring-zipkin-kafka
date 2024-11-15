@@ -1,9 +1,9 @@
 package com.yb.service
 
-import com.yb.domain.Teacher
+import com.yb.domain.jpa.Teacher
 import com.yb.dto.request.TeacherRequestDto
 import com.yb.dto.response.TeacherResponseDto
-import com.yb.repository.TeacherRepository
+import com.yb.repository.jpa.TeacherRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

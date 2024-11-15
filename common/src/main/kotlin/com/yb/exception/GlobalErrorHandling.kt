@@ -1,7 +1,8 @@
 package com.yb.exception
 
-import org.slf4j.LoggerFactory
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 @RestControllerAdvice
 class GlobalErrorHandling {
 
-    private val log = LoggerFactory.getLogger(GlobalErrorHandling::class.java);
+    private val log = KotlinLogging.logger { };
 
 //    @ExceptionHandler(value = [WebClientException::class])
 //    fun webClientRequestExceptionHandler() {
@@ -18,6 +19,12 @@ class GlobalErrorHandling {
 
     @ExceptionHandler(value = [NotFoundEmitterException::class])
     fun notFoundEmitterExceptionHandler() {
-        log.error("NotFoundEmitterException")
+        log.error { "NotFoundEmitterException" }
     }
+
+    @ExceptionHandler(value = [NotFoundException::class])
+    fun notFoundExceptionHandler() {
+        log.error { "NotFoundException" }
+    }
+
 }

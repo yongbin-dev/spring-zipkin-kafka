@@ -7,7 +7,7 @@ import com.yb.client.StudentClient
 import com.yb.dto.MessageDto
 import com.yb.dto.response.StudentResponseDto
 import com.yb.util.TraceUtil
-import org.slf4j.LoggerFactory
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.codec.ServerSentEvent
 import org.springframework.stereotype.Component
@@ -16,19 +16,15 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @Component
 class SSEClientComponent(
-    private var webClient: WebClient,
     private val tracer: Tracer,
     private val studentClient: StudentClient,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
 ) {
 
-    private val log = LoggerFactory.getLogger(this.javaClass)
+    private val log = KotlinLogging.logger { }
+    private val webClient = WebClient.create("http://localhost:8083")
 
     init {
-        webClient = WebClient.builder()
-            .baseUrl("http://localhost:8083")
-            .build()
-
         sseClientConnect()
     }
 
@@ -38,7 +34,7 @@ class SSEClientComponent(
             .retrieve()
             .bodyToFlux(object : ParameterizedTypeReference<ServerSentEvent<String>>() {})
             .doOnSubscribe {
-                log.info(" Attempting to connect to SSE stream... ")
+                log.info { " Attempting to connect to SSE stream... " }
             }
             .doOnNext { response ->
                 val data: String = response.data()!!
@@ -58,10 +54,10 @@ class SSEClientComponent(
                     span.finish()
                 }
             }.doOnComplete {
-                log.info(" Complete connected , retry SSE")
+                log.info { "Complete connected , retry SSE" }
                 sseClientConnect()
             }.doOnError {
-                log.error(" Error connected , retry SSE")
+                log.error { "Error connected , retry SSE" }
                 Thread.sleep(5000)
                 sseClientConnect()
             }
@@ -76,5 +72,6 @@ class SSEClientComponent(
         tracer.currentSpan().tag("result-data", dto.toString())
         return dto.toString();
     }
+
 
 }
