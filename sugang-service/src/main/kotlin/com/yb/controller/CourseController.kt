@@ -18,11 +18,12 @@ class CourseController(
 
     @GetMapping("/course/{courseId}")
     suspend fun getCourse(@PathVariable courseId: Long): CourseResponseDto {
-        return courseService.getCourseB yId (courseId)
+        return courseService.getCourseById(courseId)
     }
 
     @PostMapping("/course")
     suspend fun saveCourse(@RequestBody courseRequestDto: CourseRequestDto): CourseResponseDto {
         return courseService.saveCourse(courseRequestDto)
     }
+
 }

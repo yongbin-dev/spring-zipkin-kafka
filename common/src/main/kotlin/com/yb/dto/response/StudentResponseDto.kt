@@ -1,18 +1,20 @@
 package com.yb.dto.response
 
 import com.yb.domain.jpa.Student
+import java.time.LocalDateTime
 
 
 data class StudentResponseDto(
+    var id: Int?,
     var name: String,
     var age: Int,
-    var teacherId: Long
+    var createdAt: LocalDateTime
 ) {
 
     companion object {
         fun from(student: Student): StudentResponseDto {
             return StudentResponseDto(
-                student.name, student.age, student.teacherId
+                null, student.name, student.age, student.createdAt
             )
         }
     }

@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.*
-import org.springframework.kafka.listener.ContainerProperties
 import org.springframework.kafka.support.micrometer.KafkaListenerObservation
 import org.springframework.kafka.support.micrometer.KafkaTemplateObservation
 
@@ -26,11 +25,13 @@ class KafkaConfig(
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
         factory.consumerFactory = consumerFactory()
         factory.setConcurrency(1)
-//        # observation config
-        factory.containerProperties.observationConvention =
-            KafkaListenerObservation.DefaultKafkaListenerObservationConvention.INSTANCE
         factory.containerProperties.isObservationEnabled = true
-        factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
+
+//        observation config
+        factory.containerProperties.observationConvention = KafkaListenerObservation
+            .DefaultKafkaListenerObservationConvention
+            .INSTANCE
+//        factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
 //        factory.setCommonErrorHandler(kafkaErrorHandler)
         return factory
     }
@@ -46,9 +47,10 @@ class KafkaConfig(
         props[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = brokers
         props[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
+        props[ConsumerConfig.MAX_POLL_RECORDS_CONFIG] = 10
+        props[ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG] = false
 //        props[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = enableAutoCommit
 //        props[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = autoOffsetReset
-        props[ConsumerConfig.MAX_POLL_RECORDS_CONFIG] = 1
 
         return props
     }

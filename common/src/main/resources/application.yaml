@@ -35,7 +35,7 @@ spring:
 
 kafka:
   brokers: localhost:19094
-  topic: zipkin-topic
+  topic: sugang-apply
   group-id: zipkin-group
 #  max-poll-records: 3
 #  enable-auto-commit: false

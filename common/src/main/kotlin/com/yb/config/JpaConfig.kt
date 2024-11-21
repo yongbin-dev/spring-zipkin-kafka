@@ -16,8 +16,7 @@ import javax.sql.DataSource
 
 @Configuration
 @EnableJpaRepositories(basePackages = ["com.yb.repository.jpa"]) // JPA 리포지토리 패키지 경로 설정
-class JpaConfig(
-) {
+class JpaConfig {
 
     @Bean
     @ConfigurationProperties("spring.datasource.jpa")

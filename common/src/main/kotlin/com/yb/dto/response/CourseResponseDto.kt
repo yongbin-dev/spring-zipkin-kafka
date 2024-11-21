@@ -7,6 +7,7 @@ data class CourseResponseDto(
     val year: Int,
     val courseName: String,
     val professor: String,
+    val capacityCount: Int,
     val createdAt: LocalDateTime
 ) {
 
@@ -16,6 +17,7 @@ data class CourseResponseDto(
                 course.year,
                 course.courseName,
                 course.professor,
+                course.capacityCount,
                 course.createdAt ?: LocalDateTime.now()
             )
         }

@@ -16,20 +16,20 @@ class StudentController(
 
     private val log: Logger = LoggerFactory.getLogger(StudentController::class.java)
 
-    @GetMapping("/student")
-    fun find(): ResponseEntity<List<StudentResponseDto>> {
+    @GetMapping("/student/{}")
+    fun getStudent(@PathVariable id: Long): ResponseEntity<StudentResponseDto> {
         log.info("api student start")
-        return ResponseEntity.ok(studentService.findByAllStudent())
+        return ResponseEntity.ok(studentService.findStudentById(id));
     }
 
     @PostMapping("/student")
     fun create(@RequestBody studentDto: StudentRequestDto): ResponseEntity<StudentResponseDto> {
-        return ResponseEntity.ok(studentService.create(studentDto))
+        return ResponseEntity.ok(studentService.createStudent(studentDto))
     }
 
     @DeleteMapping("/student/{id}")
-    fun delete(@PathVariable id: Long) {
-
+    fun delete(@PathVariable id: Long): ResponseEntity<Unit> {
+        return ResponseEntity.ok(studentService.removeStudent(id))
     }
 
 }

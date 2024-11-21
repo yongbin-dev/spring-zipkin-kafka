@@ -1,30 +1,40 @@
 package com.yb.exception
 
+import com.yb.dto.ResponseDto
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.springframework.context.annotation.Configuration
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
-@Configuration
 @RestControllerAdvice
 class GlobalErrorHandling {
 
     private val log = KotlinLogging.logger { };
 
-//    @ExceptionHandler(value = [WebClientException::class])
-//    fun webClientRequestExceptionHandler() {
-//        log.error("webClientRequestException 에러남")
-//    }
-
-    @ExceptionHandler(value = [NotFoundEmitterException::class])
-    fun notFoundEmitterExceptionHandler() {
-        log.error { "NotFoundEmitterException" }
+    @ExceptionHandler(
+        value = [
+            NotFoundEntityException::class,
+            NotFoundException::class,
+            NotFoundEmitterException::class
+        ]
+    )
+    fun handleException(e: RuntimeException): ResponseEntity<ResponseDto> {
+        log.error { e.message }
+        val responseDto = ResponseDto(true, null, e.message ?: "")
+        return ResponseEntity.ok(responseDto);
     }
 
-    @ExceptionHandler(value = [NotFoundException::class])
-    fun notFoundExceptionHandler() {
-        log.error { "NotFoundException" }
+    @ExceptionHandler(value = [CourseException::class])
+    fun handleCourseException(e: CourseException): ResponseEntity<ResponseDto> {
+        val responseDto = ResponseDto(true, null, e.courseErrorCode.message)
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @ExceptionHandler(value = [StudentException::class])
+    fun handleStudentException(e: StudentException): ResponseEntity<ResponseDto> {
+        val responseDto = ResponseDto(true, null, e.studentErrorCode.message)
+        return ResponseEntity.ok(responseDto);
     }
 
 }
